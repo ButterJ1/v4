@@ -1,0 +1,54 @@
+{
+  "name": "fusion-plus-crosschain",
+  "version": "1.0.0",
+  "description": "1inch Fusion+ Cross-Chain Atomic Swap Extension for Ethereum-DogeChain",
+  "homepage": "https://github.com/ButterJ1/fusion-plus-crosschain#readme",
+  "bugs": {
+    "url": "https://github.com/ButterJ1/fusion-plus-crosschain/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ButterJ1/fusion-plus-crosschain.git"
+  },
+  "license": "MIT",
+  "author": "ButterJ1",
+  "type": "commonjs",
+  "main": "index.js",
+  "scripts": {
+    "compile": "hardhat compile",
+    "test": "hardhat test"
+  },
+  "keywords": [
+    "1inch",
+    "fusion-plus",
+    "cross-chain",
+    "atomic-swap",
+    "ethereum",
+    "dogechain",
+    "defi",
+    "blockchain"
+  ],
+  "devDependencies": {
+    "@nomicfoundation/hardhat-toolbox": "^4.0.0",
+    "@nomicfoundation/hardhat-verify": "^2.0.0",
+    "@typechain/ethers-v6": "^0.5.0",
+    "@typechain/hardhat": "^9.0.0",
+    "@types/chai": "^4.3.11",
+    "@types/mocha": "^10.0.6",
+    "@types/node": "^20.10.6",
+    "chai": "^4.3.10",
+    "hardhat": "^2.19.4",
+    "hardhat-gas-reporter": "^1.0.9",
+    "solidity-coverage": "^0.8.5",
+    "ts-node": "^10.9.2",
+    "typechain": "^8.3.2",
+    "typescript": "^5.3.3"
+  },
+  "dependencies": {
+    "@openzeppelin/contracts": "^5.1.0",
+    "@1inch/cross-chain-sdk": "^0.2.1-rc.58",
+    "@1inch/limit-order-sdk": "^5.0.4-rc.0",
+    "ethers": "^6.15.0",
+    "dotenv": "^16.3.1"
+  }
+}
