@@ -1,0 +1,139 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.ico" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Fusion+ Cross-Chain Swap</title>
+    <meta name="description" content="Cross-chain atomic swaps between Ethereum and DogeChain using 1inch Fusion+ technology" />
+    
+    <!-- Favicon -->
+    <link rel="icon" href="/favicon.ico" sizes="any" />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+    
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://fusion-plus-crosschain.vercel.app/" />
+    <meta property="og:title" content="Fusion+ Cross-Chain Swap" />
+    <meta property="og:description" content="Cross-chain atomic swaps between Ethereum and DogeChain using 1inch Fusion+ technology" />
+    <meta property="og:image" content="/og-image.png" />
+
+    <!-- Twitter -->
+    <meta property="twitter:card" content="summary_large_image" />
+    <meta property="twitter:url" content="https://fusion-plus-crosschain.vercel.app/" />
+    <meta property="twitter:title" content="Fusion+ Cross-Chain Swap" />
+    <meta property="twitter:description" content="Cross-chain atomic swaps between Ethereum and DogeChain using 1inch Fusion+ technology" />
+    <meta property="twitter:image" content="/og-image.png" />
+
+    <!-- Preconnect to external domains -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+    
+    <!-- CSS Variables for theming -->
+    <style>
+      :root {
+        --toast-bg: #ffffff;
+        --toast-text: #1f2937;
+        --toast-border: #e5e7eb;
+      }
+      
+      @media (prefers-color-scheme: dark) {
+        :root {
+          --toast-bg: #1f2937;
+          --toast-text: #f9fafb;
+          --toast-border: #374151;
+        }
+      }
+      
+      * {
+        box-sizing: border-box;
+      }
+      
+      body {
+        margin: 0;
+        font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+          'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+          sans-serif;
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+        background: #f8fafc;
+      }
+
+      /* Loading spinner */
+      .loading-spinner {
+        display: inline-block;
+        width: 20px;
+        height: 20px;
+        border: 3px solid #f3f3f3;
+        border-top: 3px solid #3498db;
+        border-radius: 50%;
+        animation: spin 1s linear infinite;
+      }
+
+      @keyframes spin {
+        0% { transform: rotate(0deg); }
+        100% { transform: rotate(360deg); }
+      }
+
+      /* Ensure the app takes full height */
+      #root {
+        min-height: 100vh;
+        display: flex;
+        flex-direction: column;
+      }
+
+      /* Custom scrollbar */
+      ::-webkit-scrollbar {
+        width: 8px;
+      }
+
+      ::-webkit-scrollbar-track {
+        background: #f1f1f1;
+      }
+
+      ::-webkit-scrollbar-thumb {
+        background: #c1c1c1;
+        border-radius: 4px;
+      }
+
+      ::-webkit-scrollbar-thumb:hover {
+        background: #a8a8a8;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="root">
+      <!-- Loading fallback -->
+      <div id="loading-fallback" style="
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        height: 100vh;
+        flex-direction: column;
+        gap: 20px;
+        color: #6b7280;
+      ">
+        <div class="loading-spinner"></div>
+        <p>Loading Fusion+ Cross-Chain Swap...</p>
+      </div>
+    </div>
+    
+    <script type="module" src="/src/main.tsx"></script>
+    
+    <!-- Remove loading fallback once React loads -->
+    <script>
+      window.addEventListener('DOMContentLoaded', () => {
+        setTimeout(() => {
+          const fallback = document.getElementById('loading-fallback');
+          if (fallback) {
+            fallback.style.display = 'none';
+          }
+        }, 2000);
+      });
+    </script>
+  </body>
+</html>
