@@ -93,11 +93,15 @@ contract CrossChainHTLC is ICrossChainHTLC, ReentrancyGuard, Ownable, Pausable {
         returns (bytes32 contractId) 
     {
         if (recipient == address(0)) {
-            revert HTLCUnauthorized(recipient, address(1)); // Use address(1) as non-zero placeholder
+            revert HTLCUnauthorized(recipient, msg.sender);
         }
         
         if (amount == 0) {
             revert HTLCInsufficientBalance(1, 0);
+        }
+
+        if (hashlock == bytes32(0)) {
+            revert HTLCInvalidHashlock(hashlock, bytes32(uint256(1)));
         }
 
         // Calculate contract ID
@@ -137,6 +141,11 @@ contract CrossChainHTLC is ICrossChainHTLC, ReentrancyGuard, Ownable, Pausable {
             // ERC20 token
             if (msg.value != 0) {
                 revert HTLCInsufficientBalance(0, msg.value);
+            }
+            
+            // Check allowance first
+            if (IERC20(token).allowance(msg.sender, address(this)) < amount) {
+                revert HTLCInsufficientBalance(amount, IERC20(token).allowance(msg.sender, address(this)));
             }
             
             // Transfer tokens from sender
@@ -337,6 +346,19 @@ contract CrossChainHTLC is ICrossChainHTLC, ReentrancyGuard, Ownable, Pausable {
     }
 
     /**
+     * @dev Get contract balance
+     * @param token Token address (0x0 for native)
+     * @return balance Contract balance
+     */
+    function getContractBalance(address token) external view returns (uint256 balance) {
+        if (token == address(0)) {
+            return address(this).balance;
+        } else {
+            return IERC20(token).balanceOf(address(this));
+        }
+    }
+
+    /**
      * @dev Internal function to transfer funds
      * @param token Token address (0x0 for native)
      * @param to Recipient address
@@ -403,5 +425,66 @@ contract CrossChainHTLC is ICrossChainHTLC, ReentrancyGuard, Ownable, Pausable {
         _transferFunds(htlc.token, htlc.sender, htlc.amount);
         
         emit HTLCRefunded(contractId, htlc.sender, htlc.amount);
+    }
+
+    /**
+     * @dev Get contract statistics
+     * @return totalContracts_ Total contracts created
+     * @return activeContracts Total active contracts
+     * @return totalVolume Total volume processed
+     */
+    function getStatistics() external view returns (
+        uint256 totalContracts_,
+        uint256 activeContracts,
+        uint256 totalVolume
+    ) {
+        totalContracts_ = totalContracts;
+        
+        // This is simplified - in production you'd maintain counters
+        activeContracts = 0;
+        totalVolume = 0;
+        
+        // In production, these would be maintained as state variables
+        // for gas efficiency rather than calculated on-demand
+    }
+
+    /**
+     * @dev Batch create multiple HTLCs (gas efficient)
+     * @param recipients Array of recipient addresses
+     * @param tokens Array of token addresses
+     * @param amounts Array of amounts
+     * @param hashlocks Array of hashlocks
+     * @param timelocks Array of timelocks
+     * @param counterpartIds Array of counterpart IDs
+     * @return contractIds Array of created contract IDs
+     */
+    function batchCreateHTLC(
+        address[] calldata recipients,
+        address[] calldata tokens,
+        uint256[] calldata amounts,
+        bytes32[] calldata hashlocks,
+        uint256[] calldata timelocks,
+        bytes32[] calldata counterpartIds
+    ) external payable nonReentrant whenNotPaused returns (bytes32[] memory contractIds) {
+        require(recipients.length == tokens.length, "Array length mismatch");
+        require(recipients.length == amounts.length, "Array length mismatch");
+        require(recipients.length == hashlocks.length, "Array length mismatch");
+        require(recipients.length == timelocks.length, "Array length mismatch");
+        require(recipients.length == counterpartIds.length, "Array length mismatch");
+        
+        contractIds = new bytes32[](recipients.length);
+        
+        for (uint256 i = 0; i < recipients.length; i++) {
+            // Note: This is a simplified implementation
+            // In production, you'd handle native token transfers more carefully
+            contractIds[i] = this.createHTLC{value: tokens[i] == address(0) ? amounts[i] : 0}(
+                recipients[i],
+                tokens[i],
+                amounts[i],
+                hashlocks[i],
+                timelocks[i],
+                counterpartIds[i]
+            );
+        }
     }
 }
